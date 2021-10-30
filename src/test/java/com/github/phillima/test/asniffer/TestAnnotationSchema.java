@@ -146,4 +146,24 @@ public class TestAnnotationSchema {
 		Assert.assertEquals("br.inatel.cdg.annotation",schema);
 
 	}
+
+	@Test
+	public void testDifferentAnnotationTypes() {
+		ClassModel classModel = report.getPackages()
+			.stream()
+			.filter(pk -> pk.getPackageName().equals("annotationtest"))
+			.findFirst()
+			.get()
+		.getClassModel("annotationtest.SchemaTest");
+		
+		var annnotationNameBySchema = Map.of(
+			"Import-6", "org.springframework.context.annotation",
+			"MyImport-9", "org.springframework.context.myimport",
+			"Override-12", "java.lang"
+		);
+
+		classModel.getAnnotationSchemasMap().forEach((annotationName, schema) -> {
+			assertEquals(schema, annnotationNameBySchema.get(annotationName));
+		});
+	}
 }
