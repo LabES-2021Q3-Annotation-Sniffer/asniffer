@@ -2,25 +2,20 @@ package com.github.phillima.asniffer.metric;
 
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.ImportDeclaration;
-import com.github.javaparser.ast.expr.AnnotationExpr;
-import com.github.javaparser.ast.expr.MarkerAnnotationExpr;
-import com.github.javaparser.ast.expr.NormalAnnotationExpr;
-import com.github.javaparser.ast.expr.SingleMemberAnnotationExpr;
+import com.github.javaparser.ast.expr.*;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 import com.github.phillima.asniffer.interfaces.IClassMetricCollector;
 import com.github.phillima.asniffer.model.AMReport;
 import com.github.phillima.asniffer.model.ClassModel;
 import com.google.common.collect.ImmutableSet;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ASC extends VoidVisitorAdapter<Object> implements IClassMetricCollector {
 
 
-	List<String> imports = new ArrayList<>();
+	List<ImportDeclaration> imports = new ArrayList<>();
 	HashMap<String, String> schemasMapper = new HashMap<>();
 	CompilationUnit cu;
 
@@ -44,7 +39,7 @@ public class ASC extends VoidVisitorAdapter<Object> implements IClassMetricColle
 		findSchema(node);
 		super.visit(node, obj);
 	}
-	
+
 	@Override
 	public void execute(CompilationUnit cu, ClassModel result, AMReport report) {
 		findImports(cu);
@@ -63,29 +58,27 @@ public class ASC extends VoidVisitorAdapter<Object> implements IClassMetricColle
 
 	
 	private void findSchema(AnnotationExpr annotation) {
-		boolean isInlineQualified = annotation.getName().getQualifier().isPresent();
+
+		String qualifier = annotation.getName().getQualifier().isPresent() ? getQualifier(annotation) : "";
 		int annotationLineNumber = annotation.getTokenRange().get().toRange().get().begin.line;
-		String annotationName = annotation.getName().getIdentifier();
+		String annotationName = qualifier.isEmpty() ? annotation.getNameAsString() : annotation.getName().asString().replaceFirst(qualifier.concat("\\."),"");
 		String annotationNameAndLine = annotationName + "-" + annotationLineNumber;
 
-		if (isInlineQualified) {			
-			String schema = annotation.getName().getQualifier().get().asString();
-			schemasMapper.put(annotationNameAndLine, schema);
+		if (!qualifier.isEmpty()) {
+			schemasMapper.put(annotationNameAndLine, qualifier);
 			return;
 		}
 		
 		//check if annotations was imported
-		for (String import_ : imports) {			
-			String schema = "";
-
-			if(import_.contains(annotation.getNameAsString())) {				
-				int lastIndex = import_.lastIndexOf(".");
-
-				if(annotationName.equals(import_.substring(lastIndex+1))){//was imported
-					schema = import_.substring(0,lastIndex);
-					schemasMapper.put(annotationNameAndLine, schema);
-					return;
-				}
+		for (ImportDeclaration import_ : imports) {
+			String annotationNameTemp = annotationName;
+			if(annotationName.contains("."))//it is inner annotations declaration. THe first name should be mapped to the import
+				annotationNameTemp = annotationName.substring(0,annotationName.indexOf("."));
+			if (import_.getName().getIdentifier().equals(annotationNameTemp)){
+				import_.getName().getQualifier().ifPresent(s -> {
+					schemasMapper.put(annotationNameAndLine,s.toString());
+				});
+				return;
 			}
 		}
 
@@ -98,12 +91,25 @@ public class ASC extends VoidVisitorAdapter<Object> implements IClassMetricColle
 
 		schemasMapper.put(annotationNameAndLine, schema);
 	}
-	
+
+	private String getQualifier(AnnotationExpr annotation) {
+
+		Name qualifier = annotation.getName().getQualifier().get();
+
+		while(Character.isUpperCase(qualifier.getId().charAt(0))){
+			if(qualifier.getQualifier().isPresent())
+				qualifier = qualifier.getQualifier().get();
+			else
+				return "";
+		}
+		return qualifier.asString();
+	}
+
+
 	private void findImports(CompilationUnit cu) {
-		for (Object import_ : cu.getImports()) {
-			if(import_ instanceof ImportDeclaration && !((ImportDeclaration) import_).isStatic()) {
-				imports.add(((ImportDeclaration) import_).getNameAsString());
-			}
+		for (ImportDeclaration import_ : cu.getImports()) {
+			if(!import_.isStatic())
+				imports.add(import_);
 		}
 	}
-}	
+}

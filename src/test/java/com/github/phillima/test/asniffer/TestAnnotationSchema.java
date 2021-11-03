@@ -1,7 +1,5 @@
 package com.github.phillima.test.asniffer;
 
-import com.github.phillima.asniffer.AM;
-import com.github.phillima.asniffer.AM;
 import com.github.phillima.asniffer.AmFactory;
 import com.github.phillima.asniffer.model.AMReport;
 import com.github.phillima.asniffer.model.ClassModel;
@@ -157,13 +155,43 @@ public class TestAnnotationSchema {
 		.getClassModel("annotationtest.SchemaTest");
 		
 		var annnotationNameBySchema = Map.of(
-			"Import-6", "org.springframework.context.annotation",
-			"MyImport-9", "org.springframework.context.myimport",
-			"Override-12", "java.lang"
+			"Import-15", "org.springframework.context.annotation",
+			"MyImport-18", "org.springframework.context.myimport",
+			"Override-21", "java.lang",
+			"Controller-8", "org.springframework.web.bind.annotation",
+			"RequestMapping-9", "org.springframework.web.bind.annotation",
+			"FieldMatch-10", "com.salesmanager.shop.validation",
+			"FieldMatch-24","com.salesmanager.shop.validation",
+			"FieldMatch-25","com.salesmanager.shop.validation"
 		);
 
 		classModel.getAnnotationSchemasMap().forEach((annotationName, schema) -> {
 			assertEquals(schema, annnotationNameBySchema.get(annotationName));
 		});
+
+	}
+
+	public void testAnnotationDelcaredInsideAnnotationSchema(){
+
+
+		ClassModel classModel = report.getPackages()
+				.stream()
+				.filter(pk -> pk.getPackageName().equals("annotationtest"))
+				.findFirst()
+				.get()
+				.getClassModel("annotationtest.SchemaTest");
+
+		int ac = classModel.getClassMetric("AC");
+		int asc = classModel.getClassMetric("ASC");
+		String schema1 = classModel.getAnnotationSchema("FieldMatch-11");
+		String schema2 = classModel.getAnnotationSchema("FieldMatch.List-10");
+
+		Assert.assertEquals(5,asc);
+		Assert.assertEquals(9,ac);
+		Assert.assertEquals("com.salesmanager.shop.validation",schema1);
+		Assert.assertEquals("com.salesmanager.shop.validation",schema2);
+		Assert.assertNull(classModel.getAnnotationSchema("List-10"));//Must not find an annotation named List
+		Assert.assertNull(classModel.getAnnotationSchema("List-24"));//Must not find an annotation named List
+
 	}
 }
