@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.github.phillima.asniffer.utils.FileUtils;
 import org.junit.BeforeClass;
@@ -22,6 +23,7 @@ import org.junit.Test;
 import com.github.phillima.asniffer.AM;
 import com.github.phillima.asniffer.ASniffer;
 import com.github.phillima.asniffer.model.AMReport;
+import com.github.phillima.asniffer.model.CodeElementType;
 import com.github.phillima.asniffer.output.json.d3hierarchy.Children;
 import com.github.phillima.asniffer.output.json.d3hierarchy.FetchClassViewIMP;
 import com.github.phillima.asniffer.output.json.d3hierarchy.FetchPackageViewIMP;
@@ -66,6 +68,7 @@ public class TestJSONOutput {
 		
 		//the package br.inpe.cap.output
 		Children childrens = packagesContentReport.get(3).getChildByName("com.github.phillima.asniffer.output");
+		
 		assertEquals(1, childrens.getChildrens().size());
 		
 		//the package br.inpe.cap.output.json.d3hierarchy
@@ -154,6 +157,20 @@ public class TestJSONOutput {
 		assertTrue(new File(dirPathResult + pathSeparator  + "asniffer-PV.json").delete());
 		assertTrue(new File(dirPathResult + pathSeparator ).delete());
 
+	}
+
+	@Test
+	public void testSchemaChildShouldNotHaveChildren() {
+		testFilePath = Paths.get(System.getProperty("user.dir") + "/annotationtest/properties").toString();
+		report = AmFactory.createAm(testFilePath, "asniffer").calculate();
+
+		List<Children> packagesContentReport = ReportTypeUtils.fetchPackages(report.getPackages(), new FetchSystemViewIMP());
+		
+		var schemaChildren = packagesContentReport.get(0).getChildrens().stream()
+			.filter(children -> CodeElementType.SCHEMA.equals(children.getType()))
+			.filter(children -> !children.getChildrens().isEmpty()).collect(Collectors.toList());
+
+		assertEquals(0, schemaChildren.size());			
 	}
 
 }
