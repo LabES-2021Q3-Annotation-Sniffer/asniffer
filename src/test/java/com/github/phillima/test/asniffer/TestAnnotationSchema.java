@@ -160,8 +160,9 @@ public class TestAnnotationSchema {
 			"Override-21", "java.lang",
 			"Controller-8", "org.springframework.web.bind.annotation",
 			"RequestMapping-9", "org.springframework.web.bind.annotation",
-			"FieldMatch-10", "com.salesmanager.shop.validation",
-			"FieldMatch-24","com.salesmanager.shop.validation",
+			"FieldMatch.List-10", "com.salesmanager.shop.validation",
+			"FieldMatch-11", "com.salesmanager.shop.validation",
+			"FieldMatch.List-24","com.salesmanager.shop.validation",
 			"FieldMatch-25","com.salesmanager.shop.validation"
 		);
 
