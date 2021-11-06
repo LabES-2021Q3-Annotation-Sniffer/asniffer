@@ -2,12 +2,10 @@ package com.github.phillima.test.output;
 
 import com.github.phillima.asniffer.AmFactory;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.nio.file.FileSystems;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -18,9 +16,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-
-
-import com.github.phillima.asniffer.AM;
 import com.github.phillima.asniffer.ASniffer;
 import com.github.phillima.asniffer.model.AMReport;
 import com.github.phillima.asniffer.model.CodeElementType;
@@ -161,7 +156,7 @@ public class TestJSONOutput {
 
 	@Test
 	public void testSchemaChildShouldNotHaveChildren() {
-		testFilePath = Paths.get(System.getProperty("user.dir") + "/annotationtest/properties").toString();
+		testFilePath = Paths.get(System.getProperty("user.dir") + "/annotationtest/schemaChildTest").toString();
 		report = AmFactory.createAm(testFilePath, "asniffer").calculate();
 
 		List<Children> packagesContentReport = ReportTypeUtils.fetchPackages(report.getPackages(), new FetchSystemViewIMP());
