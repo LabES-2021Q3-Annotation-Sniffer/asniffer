@@ -33,10 +33,10 @@ import com.github.phillima.asniffer.utils.ReportTypeUtils;
 
 public class TestJSONOutput {
 
-	
+
 	private static AMReport report;
 	private static String testFilePath;
-	
+
 	//Fixture
 	@BeforeClass
 	public static void setUp() {
@@ -44,15 +44,15 @@ public class TestJSONOutput {
 		testFilePath = System.getProperty("user.dir");
 		report = AmFactory.createAm(testFilePath, "asniffer").calculate();
 	}
-	
+
 	@Ignore
 	public void testJsonSV() {
-		
-		List<Children> packagesContentReport = ReportTypeUtils.fetchPackages(report.getPackages(), 
+
+		List<Children> packagesContentReport = ReportTypeUtils.fetchPackages(report.getPackages(),
 				new FetchSystemViewIMP());
-		
+
 		assertEquals(8, packagesContentReport.size());
-		
+
 		assertEquals("annotationtest", packagesContentReport.get(0).getName());
 		assertEquals("br.inpe.climaespacial.tsi.business", packagesContentReport.get(1).getName());
 		assertEquals("br.inpe.climaespacial.tsi.businesscli", packagesContentReport.get(2).getName());
@@ -62,28 +62,28 @@ public class TestJSONOutput {
 		assertEquals("com.github.phillima.test.parameter", packagesContentReport.get(6).getName());
 
 		List<Children> packageChild1 = packagesContentReport.get(3).getChildrens();
-		
+
 		//8 root packages and java lang schema
 		assertEquals(9, packageChild1.size());
-		
+
 		//the package br.inpe.cap.output
 		Children childrens = packagesContentReport.get(3).getChildByName("com.github.phillima.asniffer.output");
-		
+
 		assertEquals(1, childrens.getChildrens().size());
-		
+
 		//the package br.inpe.cap.output.json.d3hierarchy
 		List<Children> childrens2 = childrens.getChildrens().
 						get(0).getChildrens().get(2).getChildrens();
 		//2 schemas and 3 inner packages
 		assertEquals(5, childrens2.size());
-		
+
 	}
-	
+
 	@Ignore
 	public void testJsonPV() {
-		
+
 		List<Children> childrens = ReportTypeUtils.fetchPackages(report.getPackages(), new FetchPackageViewIMP());
-		
+
 		assertEquals(8, childrens.size());
 
 
@@ -91,48 +91,48 @@ public class TestJSONOutput {
 		Children packageRoot1 = childrens.stream().
 					filter(children -> children.getName().equals("com.github.phillima.asniffer")).
 					findFirst().get().getChildByName("com.github.phillima.asniffer.model");
-		
+
 		//1 class with annotation
 		assertEquals(1, packageRoot1.getChildrens().size());
-		
+
 		//br.inpe.cap packages
 		Children packageRoot2 = childrens.stream().
 				filter(children -> children.getName().equals("com.github.phillima.asniffer")).
 				findFirst().get().getChildByName("com.github.phillima.asniffer.parameters");
-		
+
 		//2 classes and 1 package
 		assertEquals(3, packageRoot2.getChildrens().size());
 	}
-	
+
 	@Ignore
 	public void testJsonCV() {
-		
+
 		List<Children> childrens = ReportTypeUtils.fetchPackages(report.getPackages()
 				, new FetchClassViewIMP());
 		assertEquals(8, childrens.size());
-		
+
 		//first package annotationtest
 		Children package1 = childrens.get(0);
 		String classTestName = "annotationtest.AbstractService";
 		Children classZ = package1.getChildByName(classTestName);
-		
+
 		assertEquals(classTestName,classZ.getName());
 
 		assertEquals(39,classZ.getChildrens().size());
-		
+
 		//Get annotations on class
 		Children annotation = classZ.getChildByName("GwtIncompatible");
 		assertEquals("annotation", annotation.getType());
 		assertEquals("0", annotation.getProperty("aa"));
 		assertEquals("1", annotation.getProperty("locad"));
 		assertEquals("0", annotation.getProperty("anl"));
-		
+
 		//second package
 		Children package2 = childrens.get(3).getChildByName("com.github.phillima.asniffer.metric");
 		List<Children> pkg1Children = package2.getChildrens();
-		
+
 		assertEquals(8, pkg1Children.size());
-		
+
 		//AC class
 		Children acClass = package2.getChildByName("com.github.phillima.asniffer.metric.AC");
 		assertEquals(6, acClass.getChildrens().size());
@@ -165,12 +165,13 @@ public class TestJSONOutput {
 		report = AmFactory.createAm(testFilePath, "asniffer").calculate();
 
 		List<Children> packagesContentReport = ReportTypeUtils.fetchPackages(report.getPackages(), new FetchSystemViewIMP());
-		
-		var schemaChildren = packagesContentReport.get(0).getChildrens().stream()
-			.filter(children -> CodeElementType.SCHEMA.equals(children.getType()))
-			.filter(children -> !children.getChildrens().isEmpty()).collect(Collectors.toList());
 
-		assertEquals(0, schemaChildren.size());			
+		var childrenOfSchema = packagesContentReport.get(0).getChildrens().stream()
+                .filter(children -> CodeElementType.SCHEMA.equals(children.getType()))
+                .filter(children -> !children.getChildrens().isEmpty())
+				.collect(Collectors.toList());
+
+		assertEquals(0, childrenOfSchema.size());
 	}
 
 }
