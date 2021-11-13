@@ -113,7 +113,7 @@ public class ClassInfo extends VoidVisitorAdapter<Object> {
 
     public CodeElementType getType() {
         return type;
-    }   
+    }
 
     public Map<Node, CodeElementModel> getCodeElementsInfo() {
         return codeElementsInfo;
@@ -126,24 +126,20 @@ public class ClassInfo extends VoidVisitorAdapter<Object> {
                     typeDeclaration -> {
                         defineTypeInClassInfo(typeDeclaration);
 
-                        cu.getPackageDeclaration()
-                            .ifPresentOrElse(packageDeclaration -> packageName = packageDeclaration.getNameAsString(),
-                            () -> packageName = PackageType.UNNAMED.toString());
+                        cu.getPackageDeclaration().ifPresentOrElse(
+                                (packageDeclaration) -> {
+                                    packageName = packageDeclaration.getNameAsString();
+                                    className = packageName + "." + cu.getPrimaryTypeName().get();
+                                },
+                                () -> {
+                                    packageName = PackageType.UNNAMED;
+                                    className = cu.getPrimaryTypeName().get();
+                                }
 
-                        className = generateClassName();
+                        );
                     }
             );
         }
-    }
-
-    private String generateClassName() {
-        var classNameQualifier = "";
-
-        if (cu.getPackageDeclaration().isPresent()) {
-            classNameQualifier = cu.getPackageDeclaration().get().getName() + ".";
-        }        
-
-        return classNameQualifier + cu.getPrimaryTypeName().get();
     }
 
     private void defineTypeInClassInfo(TypeDeclaration<?> typeDeclaration) {
@@ -160,15 +156,13 @@ public class ClassInfo extends VoidVisitorAdapter<Object> {
         }
     }
 
-    // if doest not exist a range for the node, return value -1;
     private Integer getLineStart(Node node) {
         Optional<TokenRange> tokenRange = node.getTokenRange();
         if (tokenRange.isPresent()) {
             return tokenRange.get().toRange()
                     .map(range -> range.begin.line)
-                    .orElse(-1);
+                    .orElseThrow(() -> new RuntimeException("Exists a node without a range"));
         }
         throw new RuntimeException("Exists a node without a range");
-
     }
 }

@@ -32,155 +32,157 @@ import org.junit.Test;
 public class TestJSONOutput {
 
 
-	private static AMReport report;
-	private static String testFilePath;
+    private static AMReport report;
+    private static String testFilePath;
 
-	//Fixture
-	@BeforeClass
-	public static void setUp() {
-		//Collecting ASniffer
-		testFilePath = System.getProperty("user.dir");
-		report = AmFactory.createAm(testFilePath, "asniffer").calculate();
-	}
+    //Fixture
+    @BeforeClass
+    public static void setUp() {
+        //Collecting ASniffer
+        testFilePath = System.getProperty("user.dir");
+        report = AmFactory.createAm(testFilePath, "asniffer").calculate();
+    }
 
-	@Ignore
-	public void testJsonSV() {
+    @Ignore
+    public void testJsonSV() {
 
-		List<Children> packagesContentReport = ReportTypeUtils.fetchPackages(report.getPackages(),
-				new FetchSystemViewIMP());
+        List<Children> packagesContentReport = ReportTypeUtils.fetchPackages(report.getPackages(),
+                new FetchSystemViewIMP());
 
-		assertEquals(8, packagesContentReport.size());
+        assertEquals(8, packagesContentReport.size());
 
-		assertEquals("annotationtest", packagesContentReport.get(0).getName());
-		assertEquals("br.inpe.climaespacial.tsi.business", packagesContentReport.get(1).getName());
-		assertEquals("br.inpe.climaespacial.tsi.businesscli", packagesContentReport.get(2).getName());
-		assertEquals("com.github.phillima.asniffer", packagesContentReport.get(3).getName());
-		assertEquals("com.github.phillima.test.asniffer", packagesContentReport.get(4).getName());
-		assertEquals("com.github.phillima.test.output", packagesContentReport.get(5).getName());
-		assertEquals("com.github.phillima.test.parameter", packagesContentReport.get(6).getName());
+        assertEquals("annotationtest", packagesContentReport.get(0).getName());
+        assertEquals("br.inpe.climaespacial.tsi.business", packagesContentReport.get(1).getName());
+        assertEquals("br.inpe.climaespacial.tsi.businesscli", packagesContentReport.get(2).getName());
+        assertEquals("com.github.phillima.asniffer", packagesContentReport.get(3).getName());
+        assertEquals("com.github.phillima.test.asniffer", packagesContentReport.get(4).getName());
+        assertEquals("com.github.phillima.test.output", packagesContentReport.get(5).getName());
+        assertEquals("com.github.phillima.test.parameter", packagesContentReport.get(6).getName());
 
-		List<Children> packageChild1 = packagesContentReport.get(3).getChildrens();
+        List<Children> packageChild1 = packagesContentReport.get(3).getChildrens();
 
-		//8 root packages and java lang schema
-		assertEquals(9, packageChild1.size());
+        //8 root packages and java lang schema
+        assertEquals(9, packageChild1.size());
 
-		//the package br.inpe.cap.output
-		Children childrens = packagesContentReport.get(3).getChildByName("com.github.phillima.asniffer.output");
+        //the package br.inpe.cap.output
+        Children childrens = packagesContentReport.get(3).getChildByName("com.github.phillima.asniffer.output");
 
-		assertEquals(1, childrens.getChildrens().size());
+        assertEquals(1, childrens.getChildrens().size());
 
-		//the package br.inpe.cap.output.json.d3hierarchy
-		List<Children> childrens2 = childrens.getChildrens().
-						get(0).getChildrens().get(2).getChildrens();
-		//2 schemas and 3 inner packages
-		assertEquals(5, childrens2.size());
+        //the package br.inpe.cap.output.json.d3hierarchy
+        List<Children> childrens2 = childrens.getChildrens().
+                get(0).getChildrens().get(2).getChildrens();
+        //2 schemas and 3 inner packages
+        assertEquals(5, childrens2.size());
 
-	}
+    }
 
-	@Ignore
-	public void testJsonPV() {
+    @Ignore
+    public void testJsonPV() {
 
-		List<Children> childrens = ReportTypeUtils.fetchPackages(report.getPackages(), new FetchPackageViewIMP());
+        List<Children> childrens = ReportTypeUtils.fetchPackages(report.getPackages(), new FetchPackageViewIMP());
 
-		assertEquals(8, childrens.size());
+        assertEquals(8, childrens.size());
 
 
-		//br.inpe.cap.asniffer packages
-		Children packageRoot1 = childrens.stream().
-					filter(children -> children.getName().equals("com.github.phillima.asniffer")).
-					findFirst().get().getChildByName("com.github.phillima.asniffer.model");
+        //br.inpe.cap.asniffer packages
+        Children packageRoot1 = childrens.stream().
+                filter(children -> children.getName().equals("com.github.phillima.asniffer")).
+                findFirst().get().getChildByName("com.github.phillima.asniffer.model");
 
-		//1 class with annotation
-		assertEquals(1, packageRoot1.getChildrens().size());
+        //1 class with annotation
+        assertEquals(1, packageRoot1.getChildrens().size());
 
-		//br.inpe.cap packages
-		Children packageRoot2 = childrens.stream().
-				filter(children -> children.getName().equals("com.github.phillima.asniffer")).
-				findFirst().get().getChildByName("com.github.phillima.asniffer.parameters");
+        //br.inpe.cap packages
+        Children packageRoot2 = childrens.stream().
+                filter(children -> children.getName().equals("com.github.phillima.asniffer")).
+                findFirst().get().getChildByName("com.github.phillima.asniffer.parameters");
 
-		//2 classes and 1 package
-		assertEquals(3, packageRoot2.getChildrens().size());
-	}
+        //2 classes and 1 package
+        assertEquals(3, packageRoot2.getChildrens().size());
+    }
 
-	@Ignore
-	public void testJsonCV() {
+    @Ignore
+    public void testJsonCV() {
 
-		List<Children> childrens = ReportTypeUtils.fetchPackages(report.getPackages()
-				, new FetchClassViewIMP());
-		assertEquals(8, childrens.size());
+        List<Children> childrens = ReportTypeUtils.fetchPackages(report.getPackages()
+                , new FetchClassViewIMP());
+        assertEquals(8, childrens.size());
 
-		//first package annotationtest
-		Children package1 = childrens.get(0);
-		String classTestName = "annotationtest.AbstractService";
-		Children classZ = package1.getChildByName(classTestName);
+        //first package annotationtest
+        Children package1 = childrens.get(0);
+        String classTestName = "annotationtest.AbstractService";
+        Children classZ = package1.getChildByName(classTestName);
 
-		assertEquals(classTestName,classZ.getName());
+        assertEquals(classTestName, classZ.getName());
 
-		assertEquals(39,classZ.getChildrens().size());
+        assertEquals(39, classZ.getChildrens().size());
 
-		//Get annotations on class
-		Children annotation = classZ.getChildByName("GwtIncompatible");
-		assertEquals("annotation", annotation.getType());
-		assertEquals("0", annotation.getProperty("aa"));
-		assertEquals("1", annotation.getProperty("locad"));
-		assertEquals("0", annotation.getProperty("anl"));
+        //Get annotations on class
+        Children annotation = classZ.getChildByName("GwtIncompatible");
+        assertEquals("annotation", annotation.getType());
+        assertEquals("0", annotation.getProperty("aa"));
+        assertEquals("1", annotation.getProperty("locad"));
+        assertEquals("0", annotation.getProperty("anl"));
 
-		//second package
-		Children package2 = childrens.get(3).getChildByName("com.github.phillima.asniffer.metric");
-		List<Children> pkg1Children = package2.getChildrens();
+        //second package
+        Children package2 = childrens.get(3).getChildByName("com.github.phillima.asniffer.metric");
+        List<Children> pkg1Children = package2.getChildrens();
 
-		assertEquals(8, pkg1Children.size());
+        assertEquals(8, pkg1Children.size());
 
-		//AC class
-		Children acClass = package2.getChildByName("com.github.phillima.asniffer.metric.AC");
-		assertEquals(6, acClass.getChildrens().size());
+        //AC class
+        Children acClass = package2.getChildByName("com.github.phillima.asniffer.metric.AC");
+        assertEquals(6, acClass.getChildrens().size());
 
-	}
+    }
 
-	@Ignore
-	public void testGenerateFullAVisuReportFile() {
-		ASniffer aSniffer = new ASniffer(testFilePath, testFilePath, new JSONReportAvisuIMP());
-		aSniffer.collectSingle();
-		String pathSeparator = FileSystems.getDefault().getSeparator();
+    @Ignore
+    public void testGenerateFullAVisuReportFile() {
+        ASniffer aSniffer = new ASniffer(testFilePath, testFilePath, new JSONReportAvisuIMP());
+        aSniffer.collectSingle();
+        String pathSeparator = FileSystems.getDefault().getSeparator();
 
-		String projectName = FileUtils.getProjectName(Path.of(testFilePath));
-		String dirPathResult = testFilePath + pathSeparator + "asniffer_results";
-		assertTrue(new File(dirPathResult + pathSeparator  + "asniffer-CV.json").exists());
-		assertTrue(new File(dirPathResult + pathSeparator + "asniffer-SV.json").exists());
-		assertTrue(new File(dirPathResult + pathSeparator  + "asniffer-PV.json").exists());
+        String projectName = FileUtils.getProjectName(Path.of(testFilePath));
+        String dirPathResult = testFilePath + pathSeparator + "asniffer_results";
+        assertTrue(new File(dirPathResult + pathSeparator + "asniffer-CV.json").exists());
+        assertTrue(new File(dirPathResult + pathSeparator + "asniffer-SV.json").exists());
+        assertTrue(new File(dirPathResult + pathSeparator + "asniffer-PV.json").exists());
 
-		//delete the reports
-		assertTrue(new File(dirPathResult + pathSeparator  + "asniffer-CV.json").delete());
-		assertTrue(new File(dirPathResult + pathSeparator  + "asniffer-SV.json").delete());
-		assertTrue(new File(dirPathResult + pathSeparator  + "asniffer-PV.json").delete());
-		assertTrue(new File(dirPathResult + pathSeparator ).delete());
+        //delete the reports
+        assertTrue(new File(dirPathResult + pathSeparator + "asniffer-CV.json").delete());
+        assertTrue(new File(dirPathResult + pathSeparator + "asniffer-SV.json").delete());
+        assertTrue(new File(dirPathResult + pathSeparator + "asniffer-PV.json").delete());
+        assertTrue(new File(dirPathResult + pathSeparator).delete());
 
-	}
+    }
 
-	@Test
-	public void testSchemaChildShouldNotHaveChildren() {
-		var schemaChildTestPath = Paths.get(System.getProperty("user.dir") + "/annotationtest/schemaChildTest").toString();
-		var schemaChildReport = AmFactory.createAm(schemaChildTestPath, "asniffer").calculate();
+    @Test
+    public void testSchemaChildShouldNotHaveChildren() {
+        var schemaChildTestPath = Paths.get(System.getProperty("user.dir") + "/annotationtest/schemaChildTest").toString();
+        var schemaChildReport = AmFactory.createAm(schemaChildTestPath, "asniffer").calculate();
 
-		List<Children> packagesContentReport = ReportTypeUtils.fetchPackages(schemaChildReport.getPackages(), new FetchSystemViewIMP());
+        List<Children> packagesContentReport = ReportTypeUtils.fetchPackages(schemaChildReport.getPackages(), new FetchSystemViewIMP());
 
-		var childrenOfSchema = packagesContentReport.get(0).getChildrens().stream()
+        var childrenOfSchema = packagesContentReport.get(0).getChildrens().stream()
                 .filter(children -> CodeElementType.SCHEMA.equals(children.getType()))
                 .filter(children -> !children.getChildrens().isEmpty())
-				.collect(Collectors.toList());
+                .collect(Collectors.toList());
 
-		assertEquals(0, childrenOfSchema.size());
-	}
+        assertEquals(0, childrenOfSchema.size());
+    }
 
-	@Test
-	public void testUnnamedPackage() {		
-		var unnamedClassModels = report.getPackages().stream()
-			.filter(packageModel -> packageModel.getPackageName().equals(PackageType.UNNAMED.toString()))
-			.flatMap(packageModel -> packageModel.getResults().stream())
-			.filter(ad -> ad.getFullyQualifiedName().equals("NoPackageTest"))
-			.collect(Collectors.toList());
+    @Test
+    public void testUnnamedPackage() {
+        var unnamedPackageModel = report.getPackages().stream()
+                .filter(packageModel -> PackageType.UNNAMED.equals(packageModel.getPackageName()))
+                .findFirst()
+                .get();
 
-		assertFalse(unnamedClassModels.isEmpty());
-	}
+        var unnmedClassModel = unnamedPackageModel.getResults().get(0);
+
+        assertEquals("unnamed", unnamedPackageModel.getPackageName());
+        assertEquals("NoPackageTest", unnmedClassModel.getFullyQualifiedName());
+    }
 
 }
