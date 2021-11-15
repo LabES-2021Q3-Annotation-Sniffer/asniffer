@@ -161,8 +161,8 @@ public class ClassInfo extends VoidVisitorAdapter<Object> {
         if (tokenRange.isPresent()) {
             return tokenRange.get().toRange()
                     .map(range -> range.begin.line)
-                    .orElseThrow(() -> new RuntimeException("Exists a node without a range"));
+                    .orElseThrow(() -> new RuntimeException("Node without a range found"));
         }
-        throw new RuntimeException("Exists a node without a range");
+        throw new RuntimeException("Node without a range found");
     }
 }
