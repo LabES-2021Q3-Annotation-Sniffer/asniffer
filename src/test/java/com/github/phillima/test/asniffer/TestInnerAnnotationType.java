@@ -25,7 +25,7 @@ public class TestInnerAnnotationType {
                 .filter(pk -> pk.getPackageName().equals("annotationtest"))
                 .findFirst()
                 .get()
-                .getClassModel("annotationtest.InnerAnnotationTypeTest");
+                .getFirstClassModel("annotationtest.InnerAnnotationTypeTest");
 
    }
 
@@ -73,7 +73,7 @@ public class TestInnerAnnotationType {
 
     @Test
     public void testInnerAnnotationType(){
-        CodeElementType innerAnnotation = classModel.getElementReport("Foo").getType();
+        CodeElementType innerAnnotation = classModel.getFirstElementReport("Foo").getType();
         Assert.assertEquals(CodeElementType.ANNOTATION_DECLARATION,innerAnnotation);
     }
 

@@ -45,7 +45,7 @@ public class ClassModel {
 		annotSchemasMap.put(fullyqualifiedName, simpleName);
 	}
 	
-	public CodeElementModel getElementReport(String elementName) {
+	public CodeElementModel getFirstElementReport(String elementName) {
 
 		return elementsReport.stream()
 				.filter(e -> e.getElementName().equals(elementName))
@@ -53,7 +53,7 @@ public class ClassModel {
 				.get();
 	}
 	
-	public CodeElementModel getElementReport(String elementName, CodeElementType elementType) {
+	public CodeElementModel getFirstElementReport(String elementName, CodeElementType elementType) {
 
 		return elementsReport.stream()
 				.filter(e -> e.getElementName().equals(elementName))

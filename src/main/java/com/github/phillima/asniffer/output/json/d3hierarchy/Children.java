@@ -43,7 +43,7 @@ public class Children {
 		return this.childrens;
 	}
 	
-	public Children getChildByName(String childName) {
+	public Children getFirstChildByName(String childName) {
 		for (Children children : childrens) {
 			if(children.getName().equals(childName)) 
 				return children;
@@ -51,7 +51,7 @@ public class Children {
 		return null;
 	}
 
-	public Children getChildByName(String childName, CodeElementType type) {
+	public Children getFirstChildByName(String childName, CodeElementType type) {
 		for (Children children : childrens) {
 			if(children.getName().equals(childName) && type.equals(children.getType()) ) 
 				return children;
