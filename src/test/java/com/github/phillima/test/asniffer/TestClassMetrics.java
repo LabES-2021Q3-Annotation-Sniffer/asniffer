@@ -27,7 +27,7 @@ public class TestClassMetrics {
 				.filter(pk -> pk.getPackageName().equals("annotationtest"))
 				.findFirst()
 				.get()
-				.getClassModel("annotationtest.AnnotationTest");
+				.getFirstClassModel("annotationtest.AnnotationTest");
 	}
 	
 	@Test

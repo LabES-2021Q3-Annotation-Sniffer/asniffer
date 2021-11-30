@@ -58,7 +58,7 @@ public class TestJSONOutput {
         assertEquals(9, packageChild1.size());
 
         //the package br.inpe.cap.output
-        Children childrens = packagesContentReport.get(3).getChildByName("com.github.phillima.asniffer.output");
+        Children childrens = packagesContentReport.get(3).getFirstChildByName("com.github.phillima.asniffer.output");
         assertEquals(1, childrens.getChildrens().size());
 
         //the package br.inpe.cap.output.json.d3hierarchy
@@ -80,7 +80,7 @@ public class TestJSONOutput {
         //br.inpe.cap.asniffer packages
         Children packageRoot1 = childrens.stream().
                 filter(children -> children.getName().equals("com.github.phillima.asniffer")).
-                findFirst().get().getChildByName("com.github.phillima.asniffer.model");
+                findFirst().get().getFirstChildByName("com.github.phillima.asniffer.model");
 
         //1 class with annotation
         assertEquals(1, packageRoot1.getChildrens().size());
@@ -88,7 +88,7 @@ public class TestJSONOutput {
         //br.inpe.cap packages
         Children packageRoot2 = childrens.stream().
                 filter(children -> children.getName().equals("com.github.phillima.asniffer")).
-                findFirst().get().getChildByName("com.github.phillima.asniffer.parameters");
+                findFirst().get().getFirstChildByName("com.github.phillima.asniffer.parameters");
 
         //2 classes and 1 package
         assertEquals(3, packageRoot2.getChildrens().size());
@@ -104,31 +104,31 @@ public class TestJSONOutput {
         //first package annotationtest
         Children package1 = childrens.get(0);
         String classTestName = "annotationtest.AbstractService";
-        Children classZ = package1.getChildByName(classTestName);
+        Children classZ = package1.getFirstChildByName(classTestName);
 
         assertEquals(classTestName, classZ.getName());
 
         assertEquals(39, classZ.getChildrens().size());
 
         //Get annotations on class
-        Children annotation = classZ.getChildByName("GwtIncompatible");
+        Children annotation = classZ.getFirstChildByName("GwtIncompatible");
         assertEquals("annotation", annotation.getType());
         assertEquals("0", annotation.getProperty("aa"));
         assertEquals("1", annotation.getProperty("locad"));
         assertEquals("0", annotation.getProperty("anl"));
 
         //second package
-        Children package2 = childrens.get(3).getChildByName("com.github.phillima.asniffer.metric");
+        Children package2 = childrens.get(3).getFirstChildByName("com.github.phillima.asniffer.metric");
         List<Children> pkg1Children = package2.getChildrens();
 
         assertEquals(8, pkg1Children.size());
 
         //AC class
-        Children acClass = package2.getChildByName("com.github.phillima.asniffer.metric.AC");
+        Children acClass = package2.getFirstChildByName("com.github.phillima.asniffer.metric.AC");
         assertEquals(6, acClass.getChildrens().size());
 
     }
-
+    
     @Ignore
     public void testGenerateFullAVisuReportFile() {
         ASniffer aSniffer = new ASniffer(testFilePath, testFilePath, new JSONReportAvisuIMP());

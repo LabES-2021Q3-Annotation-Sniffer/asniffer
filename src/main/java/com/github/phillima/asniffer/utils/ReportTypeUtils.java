@@ -7,14 +7,11 @@ import java.util.List;
 import java.util.Stack;
 
 import com.github.phillima.asniffer.exceptions.ReportTypeException;
-import com.github.phillima.asniffer.model.AMReport;
 import com.github.phillima.asniffer.model.CodeElementType;
 import com.github.phillima.asniffer.model.PackageModel;
 import com.github.phillima.asniffer.output.IReport;
 import com.github.phillima.asniffer.output.json.d3hierarchy.Children;
 import com.github.phillima.asniffer.output.json.d3hierarchy.IFetchChildren;
-import com.github.phillima.asniffer.output.json.d3hierarchy.ProjectReport;
-import com.github.phillima.asniffer.output.json.d3hierarchy.systemview.JSONReportSV;
 
 public class ReportTypeUtils {
 	
@@ -83,7 +80,7 @@ public class ReportTypeUtils {
 				if(rootPackageName.equals(packageParentName)) {//direct package child
 					packageContentStack.peek().addChildren(packageContent);
 				}else if(ReportTypeUtils.isParentPackage(rootPackageName, packageContent.getName())) {
-					Children newRootPackage = packageContentStack.peek().getChildByName(packageParentName, CodeElementType.PACKAGE);					
+					Children newRootPackage = packageContentStack.peek().getFirstChildByName(packageParentName, CodeElementType.PACKAGE);					
 					if(newRootPackage != null) {
 						rootPackageName = packageParentName;
 						newRootPackage.addChildren(packageContent);

@@ -42,7 +42,7 @@ public class TestAnnotationDeclaration {
 
         PackageModel package_ = report.getPackageByName("com.salesmanager.shop.validation");
 
-        ClassModel clazz = package_.getClassModel("com.salesmanager.shop.validation.Enum");
+        ClassModel clazz = package_.getFirstClassModel("com.salesmanager.shop.validation.Enum");
 
         int ac = clazz.getClassMetric("AC");
         int asc = clazz.getClassMetric("ASC");
@@ -63,7 +63,7 @@ public class TestAnnotationDeclaration {
 
         PackageModel package_ = report.getPackageByName("com.salesmanager.shop.validation");
 
-        ClassModel clazz = package_.getClassModel("com.salesmanager.shop.validation.FieldMatch");
+        ClassModel clazz = package_.getFirstClassModel("com.salesmanager.shop.validation.FieldMatch");
 
         int ac = clazz.getClassMetric("AC");
         int asc = clazz.getClassMetric("ASC");
@@ -71,7 +71,7 @@ public class TestAnnotationDeclaration {
         String schema2 = clazz.getAnnotationSchema("Constraint-35");
 
         //Fetch @interface List
-        CodeElementModel innerAnnotDeclaration =  clazz.getElementReport("List",CodeElementType.ANNOTATION_DECLARATION);
+        CodeElementModel innerAnnotDeclaration =  clazz.getFirstElementReport("List",CodeElementType.ANNOTATION_DECLARATION);
 
         //Assert FieldMatch annotation declaration
         Assert.assertNotNull(innerAnnotDeclaration);

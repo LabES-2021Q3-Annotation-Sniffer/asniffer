@@ -18,7 +18,7 @@ public class PackageModel implements Comparable<PackageModel> {
 		results.add(metric);
 	}
 
-	public ClassModel getClassModel(String name) {
+	public ClassModel getFirstClassModel(String name) {
 		for (ClassModel classModel : results) {
 			if(classModel.getFullyQualifiedName().equals(name))
 				return classModel;

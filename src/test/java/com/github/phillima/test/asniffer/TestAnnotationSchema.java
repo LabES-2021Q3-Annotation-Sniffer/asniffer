@@ -39,7 +39,7 @@ public class TestAnnotationSchema {
 				.filter(pk -> pk.getPackageName().equals("annotationtest"))
 				.findFirst()
 				.get()
-				.getClassModel("annotationtest.AbstractService");
+				.getFirstClassModel("annotationtest.AbstractService");
 
 		Map<String, String> expectedSchemas = new HashMap<String, String>();
 		expectedSchemas.put("GwtIncompatible-51", "com.google.common.annotations");
@@ -74,7 +74,7 @@ public class TestAnnotationSchema {
 				.filter(pk -> pk.getPackageName().equals("annotationtest"))
 				.findFirst()
 				.get()
-				.getClassModel("annotationtest.AnnotationTest");
+				.getFirstClassModel("annotationtest.AnnotationTest");
 
 
 		Map<String, String> expectedSchemas2 = new HashMap<String, String>();
@@ -116,7 +116,7 @@ public class TestAnnotationSchema {
 				.filter(pk -> pk.getPackageName().equals("annotationtest"))
 				.findFirst()
 				.get()
-				.getClassModel("annotationtest.AnnotationTest");
+				.getFirstClassModel("annotationtest.AnnotationTest");
 
 		List<CodeElementModel> codeElements = classModel.getElementsReport();
 
@@ -145,7 +145,7 @@ public class TestAnnotationSchema {
 				.filter(pk -> pk.getPackageName().equals("annotationtest"))
 				.findFirst()
 				.get()
-				.getClassModel("annotationtest.InnerAnnotationTypeTest");
+				.getFirstClassModel("annotationtest.InnerAnnotationTypeTest");
 		String schema = classModel.getAnnotationSchema("AnnotationFullyName-9");
 		Assert.assertEquals("br.inatel.cdg.annotation",schema);
 
@@ -158,7 +158,7 @@ public class TestAnnotationSchema {
 			.filter(pk -> pk.getPackageName().equals("annotationtest"))
 			.findFirst()
 			.get()
-		.getClassModel("annotationtest.SchemaTest");
+		.getFirstClassModel("annotationtest.SchemaTest");
 		
 		var annnotationNameBySchema = Map.of(
 			"Import-15", "org.springframework.context.annotation",
@@ -187,7 +187,7 @@ public class TestAnnotationSchema {
 				.filter(pk -> pk.getPackageName().equals("annotationtest"))
 				.findFirst()
 				.get()
-				.getClassModel("annotationtest.SchemaTest");
+				.getFirstClassModel("annotationtest.SchemaTest");
 
 		int ac = classModel.getClassMetric("AC");
 		int asc = classModel.getClassMetric("ASC");
@@ -226,7 +226,7 @@ public class TestAnnotationSchema {
 				.filter(pk -> pk.getPackageName().equals("annotationtest"))
 				.findFirst()
 				.get()
-				.getClassModel("annotationtest.TestSchemaWildCard");
+				.getFirstClassModel("annotationtest.TestSchemaWildCard");
 
 		int ac = classModel.getClassMetric("AC");
 		int asc = classModel.getClassMetric("ASC");

@@ -32,7 +32,7 @@ public class TestCodeElementMetric {
 				.filter(pk -> pk.getPackageName().equals("annotationtest"))
 				.findFirst()
 				.get()
-				.getClassModel("annotationtest.AnnotationTest");
+				.getFirstClassModel("annotationtest.AnnotationTest");
 	}
 
 	@Test

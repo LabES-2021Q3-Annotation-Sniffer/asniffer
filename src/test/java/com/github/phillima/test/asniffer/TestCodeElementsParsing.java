@@ -27,17 +27,17 @@ private static AMReport report;
 		PackageModel testPackage_ = report.getPackageByName("annotationtest");
 		//get the InnerClassTest
 		
-		ClassModel clazz = testPackage_.getClassModel("annotationtest.InnerClassTest");
+		ClassModel clazz = testPackage_.getFirstClassModel("annotationtest.InnerClassTest");
 
 		assertEquals(8,clazz.getElementsReport().size());
-		assertEquals(clazz.getElementReport("InnerClass1").getType(), CodeElementType.CLASS);
-		assertEquals(clazz.getElementReport("InnerClass2").getType(), CodeElementType.CLASS);
-		assertEquals(clazz.getElementReport("InnerClassTest", CodeElementType.CLASS).getType(), CodeElementType.CLASS);
-		assertEquals(clazz.getElementReport("InnerClassTest", CodeElementType.CONSTRUCTOR).getType(), CodeElementType.CONSTRUCTOR);
-		assertEquals(clazz.getElementReport("Enum1").getType(), CodeElementType.ENUM);
-		assertEquals(clazz.getElementReport("Enum2").getType(), CodeElementType.ENUM);
-		assertEquals(clazz.getElementReport("member1").getType(), CodeElementType.FIELD);
-		assertEquals(clazz.getElementReport("method1").getType(), CodeElementType.METHOD);
+		assertEquals(clazz.getFirstElementReport("InnerClass1").getType(), CodeElementType.CLASS);
+		assertEquals(clazz.getFirstElementReport("InnerClass2").getType(), CodeElementType.CLASS);
+		assertEquals(clazz.getFirstElementReport("InnerClassTest", CodeElementType.CLASS).getType(), CodeElementType.CLASS);
+		assertEquals(clazz.getFirstElementReport("InnerClassTest", CodeElementType.CONSTRUCTOR).getType(), CodeElementType.CONSTRUCTOR);
+		assertEquals(clazz.getFirstElementReport("Enum1").getType(), CodeElementType.ENUM);
+		assertEquals(clazz.getFirstElementReport("Enum2").getType(), CodeElementType.ENUM);
+		assertEquals(clazz.getFirstElementReport("member1").getType(), CodeElementType.FIELD);
+		assertEquals(clazz.getFirstElementReport("method1").getType(), CodeElementType.METHOD);
 	}
 	
 	
@@ -48,7 +48,7 @@ private static AMReport report;
 		PackageModel testPackage_ = report.getPackageByName("annotationtest");
 		//get the EnumTest
 		
-		ClassModel clazz = testPackage_.getClassModel("annotationtest.EnumTest");
+		ClassModel clazz = testPackage_.getFirstClassModel("annotationtest.EnumTest");
 		assertEquals(CodeElementType.ENUM, clazz.getType());
 		assertEquals(1, clazz.getElementsReport().size());
 

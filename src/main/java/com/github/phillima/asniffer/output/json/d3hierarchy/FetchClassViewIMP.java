@@ -22,7 +22,7 @@ public class FetchClassViewIMP implements IFetchChildren {
 			classZ.addProperty("asc", String.valueOf(classReport.getClassMetric("ASC")));
 			classZ.addProperty("uac", String.valueOf(classReport.getClassMetric("UAC")));
 			//add annotations configuring the class as children
-			classZ.addAllChidren(fetchAnnotations(classReport.getElementReport(classReport.getSimpleName(),
+			classZ.addAllChidren(fetchAnnotations(classReport.getFirstElementReport(classReport.getSimpleName(),
 																			   classReport.getType())));
 			classZ.addAllChidren(fetchCodeElements(classReport));
 			classes_.add(classZ);
